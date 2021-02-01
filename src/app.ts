@@ -1,4 +1,6 @@
 import express from 'express';
+import router from './controllers';
+import { AppError } from './models/appError';
 
 const app = express();
 
@@ -19,13 +21,26 @@ app.get( '/', ( req: express.Request, res: express.Response ) => {
     res.json( {
         message: 'Hello, mate! 🦘'
     } );
-} )
-
-app.use( '/api/v1', () => {
-    console.log( 'hello' );
 } );
 
-// app.use( notFound );
-// app.use( errorHandler );
+// Router
+app.use( '/api/v1', router );
+
+app.use( ( error: AppError, req: express.Request, res: express.Response, next: any ) => {
+    res.status( res.statusCode );
+    res.json( {
+        status: res.statusCode,
+        message: error.message,
+        stack: process.env.NODE_ENV === 'production' ? '🤷🏻‍♂️' : error.stack,
+        errors: error.message,
+    } );
+} );
+
+app.use( ( req: express.Request, res: express.Response, next: any ) => {
+    const error = new Error( `Not found - ${req.originalUrl}` );
+    res.status( 404 );
+    next( error );
+} );
+
 
 export default app;
