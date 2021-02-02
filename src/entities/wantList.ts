@@ -1,4 +1,6 @@
 export interface WantList {
-    want_list_id: number;
+    wantListId: number;
     name: string;
+    specialId: string;
+    createdBy: string;
 }

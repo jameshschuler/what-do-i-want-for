@@ -26,6 +26,12 @@ app.get( '/', ( req: express.Request, res: express.Response ) => {
 // Router
 app.use( '/api/v1', router );
 
+app.use( ( req: express.Request, res: express.Response, next: any ) => {
+    const error = new Error( `Not found - ${req.originalUrl}` );
+    res.status( 404 );
+    next( error );
+} );
+
 app.use( ( error: AppError, req: express.Request, res: express.Response, next: any ) => {
     res.status( res.statusCode );
     res.json( {
@@ -35,12 +41,5 @@ app.use( ( error: AppError, req: express.Request, res: express.Response, next: a
         errors: error.message,
     } );
 } );
-
-app.use( ( req: express.Request, res: express.Response, next: any ) => {
-    const error = new Error( `Not found - ${req.originalUrl}` );
-    res.status( 404 );
-    next( error );
-} );
-
 
 export default app;
