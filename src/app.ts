@@ -1,14 +1,18 @@
+import compression from 'compression';
+import cors from 'cors';
 import express from 'express';
+import helmet from 'helmet';
+import morgan from 'morgan';
 import router from './controllers';
 import { AppError } from './models/appError';
 
 const app = express();
 
-// app.use( morgan( 'tiny' ) );
-// app.use( compression() );
-// app.use( helmet() );
-// app.use( express.json( { type: 'application/json' } ) );
-// app.use( cors() );
+app.use( morgan( 'tiny' ) );
+app.use( compression() );
+app.use( helmet() );
+app.use( express.json( { type: 'application/json' } ) );
+app.use( cors() );
 // const limiter = rateLimit( {
 //     windowMs: 15 * 60 * 1000, // 15 minutes
 //     max: 50

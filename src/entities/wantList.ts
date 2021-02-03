@@ -1,6 +1,10 @@
+import { WantListItem } from './wantListItem';
+
 export interface WantList {
-    wantListId: number;
+    want_list_id: number;
     name: string;
-    specialId: string;
-    createdBy: string;
+    special_id: string;
+    created_by: string;
+    created_at: string;
+    want_list_item: WantListItem[]
 }
