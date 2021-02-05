@@ -15,8 +15,12 @@ export default class ListController {
         let router = express.Router();
         router.post( '/', asyncHandler(
             async ( req: express.Request, res: express.Response, next: any ) => this.createList( req, res ) ) );
+
         router.get( '/:id', asyncHandler(
             async ( req: express.Request, res: express.Response ) => this.getList( req, res ) ) );
+
+        router.post( '/:id', asyncHandler(
+            async ( req: express.Request, res: express.Response ) => this.publishList( req, res ) ) );
 
         return router;
     }
@@ -35,7 +39,11 @@ export default class ListController {
     }
 
     public async getList ( req: express.Request, res: express.Response ) {
-        const list = await this.listService.getList( req.params.id, Boolean( req.query.includeItems ) );
+        const list = await this.listService.getList( req.params.id );
         res.json( list );
+    }
+
+    public async publishList ( req: express.Request, res: express.Response ) {
+        // TODO:
     }
 }

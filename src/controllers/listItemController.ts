@@ -12,9 +12,12 @@ export default class ListItemController {
     public registerRoutes () {
         let router = express.Router();
 
-        router.post( '/', asyncHandler(
+        router.post( '/:id/item', asyncHandler(
             async ( req: express.Request, res: express.Response ) => this.createListItem( req, res ) ) );
-        router.get( '/:id', asyncHandler(
+        router.get( '/:id/item', asyncHandler(
+            async ( req: express.Request, res: express.Response ) => this.getListItems( req, res ) ) );
+
+        router.post( '/:id/item/:itemId', asyncHandler(
             async ( req: express.Request, res: express.Response ) => this.getListItems( req, res ) ) );
 
         return router;
@@ -27,13 +30,22 @@ export default class ListItemController {
             return;
         }
 
-        await this.listItemService.createListItem( request );
+        const listId = parseInt( req.params.id );
+        await this.listItemService.createListItem( listId, request );
         res.statusCode = StatusCodes.CREATED;
         res.json();
     }
 
     public async getListItems ( req: express.Request, res: express.Response ) {
-        // const list = await this.listService.getList( req.params.id );
-        // res.json( list );
+        const listId = +req.params.id;
+
+        const listItems = await this.listItemService.getListItems( listId );
+
+        res.statusCode = StatusCodes.OK;
+        res.json( listItems );
+    }
+
+    public async claimListItem ( req: express.Request, res: express.Response ) {
+        // TODO: 
     }
 }

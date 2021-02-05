@@ -6,5 +6,6 @@ export interface WantList {
     special_id: string;
     created_by: string;
     created_at: string;
+    published: boolean;
     want_list_item: WantListItem[]
 }

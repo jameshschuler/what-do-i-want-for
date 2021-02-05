@@ -8,6 +8,7 @@ export class WantListResponse {
     specialId: string;
     createdBy: string;
     createdAt: string;
+    published: boolean;
     wantListItems: WantListItemResponse[];
 
     public static convert ( wantList: WantList ): WantListResponse {
@@ -17,6 +18,7 @@ export class WantListResponse {
             createdAt: wantList.created_at,
             createdBy: wantList.created_by,
             wantListId: wantList.want_list_id,
+            published: wantList.published,
             wantListItems: wantList.want_list_item?.map( ( e: WantListItem ) => WantListItemResponse.convert( e ) )
         }
     }

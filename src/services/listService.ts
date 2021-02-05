@@ -20,31 +20,14 @@ export default class ListService {
         return data !== null && data[ 0 ] !== null ? data[ 0 ].want_list_id : null;
     }
 
-    public async getList ( id: string, includeItems?: boolean ): Promise<WantListResponse | null> {
+    public async getList ( id: string ): Promise<WantListResponse | null> {
         let response;
 
-        let q =
-            `want_list_id,    
-            name,
-            created_by,
-            created_at,
-            special_id`;
-
-        if ( includeItems ) {
-            q +=
-                `,want_list_item (
-                created_at,
-                link,
-                value,
-                want_list_item_id,
-                is_claimed)`
-        }
-
         if ( isNumeric( id ) ) {
-            response = await supabase.from<WantList>( TableNames.WantList ).select( q )
+            response = await supabase.from<WantList>( TableNames.WantList ).select( '*' )
                 .eq( 'want_list_id', id ).single();
         } else {
-            response = await supabase.from<WantList>( TableNames.WantList ).select( q )
+            response = await supabase.from<WantList>( TableNames.WantList ).select( '*' )
                 .eq( 'special_id', id ).single();
         }
 
@@ -55,5 +38,9 @@ export default class ListService {
         }
 
         return WantListResponse.convert( data );
+    }
+
+    public async publishList ( listId: number ) {
+        // TODO:
     }
 }

@@ -10,6 +10,6 @@ const listItemService = new ListItemService();
 const router = express.Router();
 
 router.use( '/list', new ListController( listService ).registerRoutes() );
-router.use( '/item', new ListItemController( listItemService ).registerRoutes() );
+router.use( '/list', new ListItemController( listItemService ).registerRoutes() );
 
 export default router;

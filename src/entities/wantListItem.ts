@@ -5,4 +5,6 @@ export interface WantListItem {
     value: string;
     is_claimed: boolean;
     link: string;
+    claimed_by: string;
+    is_disabled: boolean;
 }
