@@ -19,7 +19,7 @@ export default class ListController {
         router.get( '/:id', asyncHandler(
             async ( req: express.Request, res: express.Response ) => this.getList( req, res ) ) );
 
-        router.post( '/:id', asyncHandler(
+        router.post( '/:id/publish', asyncHandler(
             async ( req: express.Request, res: express.Response ) => this.publishList( req, res ) ) );
 
         return router;
@@ -44,6 +44,9 @@ export default class ListController {
     }
 
     public async publishList ( req: express.Request, res: express.Response ) {
-        // TODO:
+        await this.listService.publishList( parseInt( req.params.id ) );
+
+        res.statusCode = StatusCodes.NO_CONTENT;
+        res.json();
     }
 }

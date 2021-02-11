@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { StatusCodes } from 'http-status-codes';
 import supabase from '../db/supabaseClient';
 import { TableNames } from '../db/tableNames';
@@ -41,6 +42,18 @@ export default class ListService {
     }
 
     public async publishList ( listId: number ) {
-        // TODO:
+        const { data, error } = await supabase
+            .from<WantList>( TableNames.WantList )
+            .update( {
+                published: true,
+                published_by: 'test_user',
+                published_at: dayjs().toISOString()
+            } )
+            .eq( 'want_list_id', listId )
+            .not( 'published', 'eq', true );
+
+        if ( error || !data ) {
+            throw new AppError( 'Unable to publish list. Please try again.', StatusCodes.BAD_REQUEST );
+        }
     }
 }

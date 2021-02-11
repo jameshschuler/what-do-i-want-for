@@ -7,5 +7,7 @@ export interface WantList {
     created_by: string;
     created_at: string;
     published: boolean;
-    want_list_item: WantListItem[]
+    want_list_item: WantListItem[];
+    published_by: string;
+    published_at: string;
 }

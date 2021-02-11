@@ -10,7 +10,11 @@ import { WantListItemResponse } from '../models/response/wantListItemResponse';
 export default class ListItemService {
 
     public async createListItem ( listId: number, request: CreateListItemRequest ) {
-        const existingListId = await this.getList( listId );
+        const { want_list_id: existingListId, published } = await this.getList( listId );
+
+        if ( published ) {
+            throw new AppError( 'List has already been published and cannot be modified.', StatusCodes.UNPROCESSABLE_ENTITY );
+        }
 
         await supabase.from<WantListItem>( TableNames.WantListItem ).insert( {
             want_list_id: existingListId,
@@ -20,7 +24,7 @@ export default class ListItemService {
     }
 
     public async getListItems ( listId: number ) {
-        const existingListId = await this.getList( listId );
+        const { want_list_id: existingListId, } = await this.getList( listId );
 
         const response = await supabase.from<WantListItem>( TableNames.WantListItem ).select( '*' ).eq( 'want_list_id', existingListId );
 
@@ -31,14 +35,14 @@ export default class ListItemService {
         // TODO:
     }
 
-    private async getList ( listId: number ): Promise<number> {
-        const { data, error } = await supabase.from( TableNames.WantList ).select( 'want_list_id' )
+    private async getList ( listId: number ): Promise<any> {
+        const { data, error } = await supabase.from( TableNames.WantList ).select( 'want_list_id, published' )
             .eq( 'want_list_id', listId )
 
         if ( error || !data || data.length === 0 ) {
             throw new AppError( 'No matching list found.', StatusCodes.NOT_FOUND );
         }
 
-        return data[ 0 ].want_list_id;
+        return data[ 0 ];
     }
 }
