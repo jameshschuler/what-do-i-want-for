@@ -34,19 +34,16 @@ export default class ListController {
         const listId = await this.listService.createList( request );
 
         res.location( '/api/v1/list/' + listId )
-        res.statusCode = StatusCodes.CREATED;
-        res.json();
+        res.status( StatusCodes.CREATED ).json();
     }
 
     public async getList ( req: express.Request, res: express.Response ) {
         const list = await this.listService.getList( req.params.id );
-        res.json( list );
+        res.status( StatusCodes.OK ).json( list );
     }
 
     public async publishList ( req: express.Request, res: express.Response ) {
-        await this.listService.publishList( parseInt( req.params.id ) );
-
-        res.statusCode = StatusCodes.NO_CONTENT;
-        res.json();
+        await this.listService.publishList( +req.params.id );
+        res.status( StatusCodes.NO_CONTENT ).json();
     }
 }

@@ -7,5 +7,6 @@ export interface CustomError extends Error {
 export class AppError extends Error {
     constructor( message: string, public statusCode: StatusCodes ) {
         super( message );
+        console.log( statusCode );
     }
 }

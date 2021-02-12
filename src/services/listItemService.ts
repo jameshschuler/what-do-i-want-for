@@ -13,7 +13,8 @@ export default class ListItemService {
         const { want_list_id: existingListId, published } = await this.getList( listId );
 
         if ( published ) {
-            throw new AppError( 'List has already been published and cannot be modified.', StatusCodes.UNPROCESSABLE_ENTITY );
+            throw new AppError( 'List has already been published and cannot be modified.',
+                StatusCodes.UNPROCESSABLE_ENTITY );
         }
 
         await supabase.from<WantListItem>( TableNames.WantListItem ).insert( {
@@ -26,13 +27,17 @@ export default class ListItemService {
     public async getListItems ( listId: number ) {
         const { want_list_id: existingListId, } = await this.getList( listId );
 
-        const response = await supabase.from<WantListItem>( TableNames.WantListItem ).select( '*' ).eq( 'want_list_id', existingListId );
+        const response = await supabase.from<WantListItem>( TableNames.WantListItem ).select( '*' )
+            .eq( 'want_list_id', existingListId );
 
         return response.data?.map( ( listItem: WantListItem ) => WantListItemResponse.convert( listItem ) );
     }
 
     public async claimListItem ( listId: number, listItemId: number, request: ClaimListItemRequest ) {
-        // TODO:
+        // TODO: get list
+        // TODO: get list item
+        // ensure list item isn't already claimed 
+        // if claimed is null or empty set to 'anonymous'
     }
 
     private async getList ( listId: number ): Promise<any> {

@@ -35,7 +35,7 @@ export default class ListService {
         const { error, data } = response;
 
         if ( error || !data ) {
-            throw new AppError( 'No matching list found.', StatusCodes.NOT_FOUND )
+            throw new AppError( 'No matching list found.', StatusCodes.NOT_FOUND );
         }
 
         return WantListResponse.convert( data );

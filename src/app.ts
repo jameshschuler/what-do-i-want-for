@@ -37,9 +37,8 @@ app.use( ( req: express.Request, res: express.Response, next: any ) => {
 } );
 
 app.use( ( error: AppError, req: express.Request, res: express.Response, next: any ) => {
-    res.status( res.statusCode );
-    res.json( {
-        status: res.statusCode,
+    res.status( error.statusCode ).json( {
+        status: error.statusCode,
         message: error.message,
         stack: process.env.NODE_ENV === 'production' ? '🤷🏻‍♂️' : error.stack,
         errors: error.message,

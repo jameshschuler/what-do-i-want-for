@@ -2,6 +2,7 @@ import express from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { validateRequestModel } from '../helpers/validation';
 import { asyncHandler } from '../middlewares/asyncHandler';
+import { ClaimListItemRequest, claimListItemRequestSchema } from '../models/request/claimListItemRequest';
 import { CreateListItemRequest, createListItemRequestSchema } from '../models/request/createListItemRequest';
 import ListItemService from '../services/listItemService';
 
@@ -17,8 +18,8 @@ export default class ListItemController {
         router.get( '/:id/item', asyncHandler(
             async ( req: express.Request, res: express.Response ) => this.getListItems( req, res ) ) );
 
-        router.post( '/:id/item/:itemId', asyncHandler(
-            async ( req: express.Request, res: express.Response ) => this.getListItems( req, res ) ) );
+        router.post( '/:id/item/:itemId/claim', asyncHandler(
+            async ( req: express.Request, res: express.Response ) => this.claimListItem( req, res ) ) );
 
         return router;
     }
@@ -30,8 +31,8 @@ export default class ListItemController {
             return;
         }
 
-        const listId = parseInt( req.params.id );
-        await this.listItemService.createListItem( listId, request );
+        await this.listItemService.createListItem( +req.params.id, request );
+
         res.statusCode = StatusCodes.CREATED;
         res.json();
     }
@@ -46,6 +47,14 @@ export default class ListItemController {
     }
 
     public async claimListItem ( req: express.Request, res: express.Response ) {
-        // TODO: 
+        const request = req.body as ClaimListItemRequest;
+
+        if ( !validateRequestModel( request, res, claimListItemRequestSchema ) ) {
+            return;
+        }
+
+        await this.listItemService.claimListItem( +req.params.id, +req.params.itemId, request );
+
+        res.status( StatusCodes.NO_CONTENT ).json();
     }
 }
