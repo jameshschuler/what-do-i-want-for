@@ -34,15 +34,28 @@ export default class ListItemService {
     }
 
     public async claimListItem ( listId: number, listItemId: number, request: ClaimListItemRequest ) {
-        // TODO: get list
-        // TODO: get list item
-        // ensure list item isn't already claimed 
-        // if claimed is null or empty set to 'anonymous'
+        if ( request.claimedBy === '' ) {
+            request.claimedBy = 'anonymous';
+        }
+
+        const { data, error } = await supabase
+            .from<WantListItem>( TableNames.WantListItem )
+            .update( {
+                claimed_by: request.claimedBy,
+                is_claimed: true,
+            } )
+            .eq( 'want_list_id', listId )
+            .eq( 'want_list_item_id', listItemId )
+            .not( 'is_claimed', 'eq', true );
+
+        if ( error || !data ) {
+            throw new AppError( 'Unable to claim list item. Please try again.', StatusCodes.BAD_REQUEST );
+        }
     }
 
     private async getList ( listId: number ): Promise<any> {
         const { data, error } = await supabase.from( TableNames.WantList ).select( 'want_list_id, published' )
-            .eq( 'want_list_id', listId )
+            .eq( 'want_list_id', listId );
 
         if ( error || !data || data.length === 0 ) {
             throw new AppError( 'No matching list found.', StatusCodes.NOT_FOUND );
