@@ -12,7 +12,9 @@ app.use( morgan( 'tiny' ) );
 app.use( compression() );
 app.use( helmet() );
 app.use( express.json( { type: 'application/json' } ) );
-app.use( cors() );
+app.use( cors( {
+    exposedHeaders: 'Location',
+} ) );
 // const limiter = rateLimit( {
 //     windowMs: 15 * 60 * 1000, // 15 minutes
 //     max: 50
