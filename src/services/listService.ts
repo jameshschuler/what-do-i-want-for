@@ -18,7 +18,7 @@ export default class ListService {
             special_id: generateRandomString()
         } );
 
-        return data !== null && data[ 0 ] !== null ? data[ 0 ].want_list_id : null;
+        return data !== null && data[ 0 ] !== null ? data[ 0 ].special_id : null;
     }
 
     public async getList ( id: string ): Promise<WantListResponse | null> {
