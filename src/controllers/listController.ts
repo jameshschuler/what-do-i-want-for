@@ -57,7 +57,7 @@ export default class ListController {
             return;
         }
 
-        const listId = await this.listService.updateList( +req.params.id, request );
+        const listId = await this.listService.updateList( req.params.id, request );
 
         res.location( '/api/v1/list/' + listId )
         res.status( StatusCodes.NO_CONTENT ).json();

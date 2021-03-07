@@ -58,7 +58,7 @@ export default class ListService {
         }
     }
 
-    public async updateList ( listId: number, updateListRequest: UpdateListRequest ): Promise<number> {
+    public async updateList ( listId: string, updateListRequest: UpdateListRequest ): Promise<string> {
         const { data, error } = await supabase
             .from<WantList>( TableNames.WantList )
             .update( {
@@ -66,7 +66,7 @@ export default class ListService {
                 updated_by: updateListRequest.updatedBy,
                 updated_at: dayjs().toISOString()
             } )
-            .eq( 'want_list_id', listId )
+            .eq( 'special_id', listId )
             .not( 'published', 'eq', true );
 
         if ( error || !data ) {
