@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { StatusCodes } from 'http-status-codes';
+import { UpdateListRequest } from 'src/models/request/updateListRequest';
 import supabase from '../db/supabaseClient';
 import { TableNames } from '../db/tableNames';
 import { WantList } from '../entities/wantList';
@@ -55,5 +56,23 @@ export default class ListService {
         if ( error || !data ) {
             throw new AppError( 'Unable to publish list. Please try again.', StatusCodes.BAD_REQUEST );
         }
+    }
+
+    public async updateList ( listId: number, updateListRequest: UpdateListRequest ): Promise<number> {
+        const { data, error } = await supabase
+            .from<WantList>( TableNames.WantList )
+            .update( {
+                name: updateListRequest.name,
+                updated_by: updateListRequest.updatedBy,
+                updated_at: dayjs().toISOString()
+            } )
+            .eq( 'want_list_id', listId )
+            .not( 'published', 'eq', true );
+
+        if ( error || !data ) {
+            throw new AppError( 'Unable to update list. Please try again.', StatusCodes.BAD_REQUEST );
+        }
+
+        return listId;
     }
 }

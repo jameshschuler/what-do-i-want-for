@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { validateRequestModel } from '../helpers/validation';
 import { asyncHandler } from '../middlewares/asyncHandler';
 import { CreateListRequest, createListRequestSchema } from '../models/request/createListRequest';
+import { UpdateListRequest, updateListRequestSchema } from '../models/request/updateListRequest';
 import ListService from '../services/listService';
 
 export default class ListController {
@@ -22,6 +23,9 @@ export default class ListController {
         router.post( '/:id/publish', asyncHandler(
             async ( req: express.Request, res: express.Response ) => this.publishList( req, res ) ) );
 
+        router.put( '/:id', asyncHandler(
+            async ( req: express.Request, res: express.Response ) => this.updateList( req, res ) ) );
+
         return router;
     }
 
@@ -33,7 +37,7 @@ export default class ListController {
 
         const listId = await this.listService.createList( request );
 
-        res.location( '/api/v1/list/' + listId )
+        res.location( '/api/v1/list/' + listId );
         res.status( StatusCodes.CREATED ).json();
     }
 
@@ -44,6 +48,18 @@ export default class ListController {
 
     public async publishList ( req: express.Request, res: express.Response ) {
         await this.listService.publishList( +req.params.id );
+        res.status( StatusCodes.NO_CONTENT ).json();
+    }
+
+    public async updateList ( req: express.Request, res: express.Response ) {
+        const request = req.body as UpdateListRequest;
+        if ( !validateRequestModel( request, res, updateListRequestSchema ) ) {
+            return;
+        }
+
+        const listId = await this.listService.updateList( +req.params.id, request );
+
+        res.location( '/api/v1/list/' + listId )
         res.status( StatusCodes.NO_CONTENT ).json();
     }
 }
